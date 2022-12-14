@@ -42,7 +42,8 @@ jobs:
       - name: Run Appium Flutter Tests on emulator
         uses: reactivecircus/android-emulator-runner@v2.27.0
         with:
-          api-level: ${{ matrix.api-level }}
+          #api-level: ${{ matrix.api-level }}
+          api-level: 29
           target: ${{ matrix.target }}
           arch: x86_64
           profile: Nexus 6
