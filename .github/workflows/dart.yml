@@ -11,7 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        api-level: [21, 23, 29]
     
     steps:
       - uses: actions/checkout@v3
@@ -37,10 +39,16 @@ jobs:
       - name: Analyze project source
         run: dart analyze
 
-      - name: run tests
+      - name: Install the Emulator
+        run: |
+          chmod +x ./scripts/RunAppiumServer.sh
+          ./scripts/RunAppiumServer.sh
+        shell: bash   
+      - name: Run Appium Flutter Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          ndk: 21.0.6113669
-          cmake: 3.10.2.4988404
-          script: ./gradlew connectedCheck
+          api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: x86_64
+          profile: Nexus 6
+          script: dart appium-test/main_test.dart
